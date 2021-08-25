@@ -12,16 +12,16 @@ class Navigate {
   Navigate.internal();
   factory Navigate() => _instance;
   /* defualt Navigate Transactiontype */
-  static TransactionType defultTransactionType;
+  static TransactionType? defultTransactionType;
   /* routes information */
-  static Map<String, Handler> _appRoutes;
+  static Map<String, Handler>? _appRoutes;
 
   static Future<dynamic> navigate(BuildContext context, String routeName,
       {arg,
-      TransactionType transactionType,
+      TransactionType? transactionType,
       ReplaceRoute replaceRoute = ReplaceRoute.none}) async {
-    if (_appRoutes.containsKey(routeName)) {
-      var handler = _appRoutes[routeName];
+    if (_appRoutes!.containsKey(routeName)) {
+      var handler = _appRoutes![routeName]!;
       return await handler.renderWithAnimation(
           context, arg, transactionType, replaceRoute);
     } else {
@@ -30,7 +30,7 @@ class Navigate {
   }
 
   static registerRoutes(
-      {Map<String, Handler> routes,
+      {Map<String, Handler>? routes,
       TransactionType defualtTransactionType = TransactionType.fromBottom}) {
     _appRoutes = routes;
     defultTransactionType = defualtTransactionType;
@@ -39,8 +39,8 @@ class Navigate {
 
 /* Route ChangePage handler */
 class Handler {
-  final Function(BuildContext context, dynamic arg) pageBuilder;
-  TransactionType transactionType;
+  final Function(BuildContext context, dynamic arg)? pageBuilder;
+  TransactionType? transactionType;
   Handler({this.pageBuilder, this.transactionType});
 
   Future<dynamic> renderWithAnimation(BuildContext context, arg,
@@ -51,7 +51,7 @@ class Handler {
           new PageRouteBuilder(
               opaque: false,
               pageBuilder: (BuildContext context, _, __) {
-                return pageBuilder(context, arg);
+                return pageBuilder!(context, arg);
               },
               transitionsBuilder: pageTransaction(transactionType)));
     } else if (replaceRoute == ReplaceRoute.thisOne) {
@@ -60,7 +60,7 @@ class Handler {
           new PageRouteBuilder(
               opaque: false,
               pageBuilder: (BuildContext context, _, __) {
-                return pageBuilder(context, arg);
+                return pageBuilder!(context, arg);
               },
               transitionsBuilder: pageTransaction(transactionType)));
     } else if (replaceRoute == ReplaceRoute.all) {
@@ -69,15 +69,15 @@ class Handler {
           new PageRouteBuilder(
               opaque: false,
               pageBuilder: (BuildContext context, _, __) {
-                return pageBuilder(context, arg);
+                return pageBuilder!(context, arg);
               },
               transitionsBuilder: pageTransaction(transactionType)),
           (Route<dynamic> route) => false);
     }
   }
 
-  pageTransaction(TransactionType comeFromParam) {
-    TransactionType pageTras = comeFromParam != null
+  pageTransaction(TransactionType? comeFromParam) {
+    TransactionType? pageTras = comeFromParam != null
         ? comeFromParam
         : (this.transactionType != null)
             ? this.transactionType
@@ -154,7 +154,7 @@ class Handler {
 /* Clip Oval Transaction */
 class PageCome extends CustomClipper<ui.Rect> {
   final revalPercentage;
-  final TransactionType trasType;
+  final TransactionType? trasType;
 
   PageCome({this.revalPercentage = 0.7, this.trasType});
   @override
